@@ -18,7 +18,6 @@ To compare players with different roles, we compute a custom **Performance Score
 
 This blends volume and efficiency into a single metric that works across positions.
 
----
 
 ## Interesting Insight
 
@@ -26,7 +25,6 @@ One early insight from our analysis is that **salary does not always match singl
 
 (We will add a visualization here once exported using `ggsave()`.)
 
----
 
 ## Data Sources and Acknowledgements
 
@@ -38,7 +36,6 @@ Our data comes from publicly available NBA statistics and salary databases:
 
 We acknowledge the creators and maintainers of these resources, as well as the authors of the tidyverse ecosystem, which we use extensively for data wrangling, visualization, and reproducibility.
 
----
 
 ## Current Plan
 
@@ -50,8 +47,6 @@ Our project follows the **Plan–Code–Improve–Polish (PCIP)** system emphasi
 - **Polish:** Add alt text, improve readability, finalize narrative text, and ensure full reproducibility through Quarto and GitHub.
 
 A more detailed plan is included in our Quarto document.
-
----
 
 ## Repo Structure
 
