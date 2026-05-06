@@ -5,10 +5,12 @@ format: html
 ---
 
 # Introduction
-Write your introduction here.
+The goal of this project is to explore how NBA players’ value changes between the ages of 25 and 30, a period often considered the prime of an athlete’s career. During these years, players typically reach a balance of physical ability, experience, and consistency. However, it is not always clear whether a player’s salary actually reflects their on‑court performance during this window.
+
+In this analysis, we examine trends in player efficiency, scoring, and contract size to understand how performance and pay evolve over time. By comparing production metrics to salary data, we aim to identify whether teams are overpaying, underpaying, or accurately valuing players as they move through their prime years. This helps highlight broader patterns in how NBA teams make financial decisions and how player value shifts across age.
 
 # Data
-Write your data section here.
+The data for this project comes from a dataset containing NBA player statistics, salary information, and age for multiple seasons. Each row represents a single player‑season, including variables such as points per game, efficiency metrics, minutes played, and contract value. We focused specifically on players between the ages of 25 and 30 to capture the years commonly considered an athlete’s prime. Before analysis, we filtered the dataset to include only players with complete information for both performance and salary, ensuring that comparisons across age groups were consistent and meaningful. This dataset allows us to examine how player value changes over time and whether salary trends align with on‑court production.
 
 # Methods
 Write your methods section here.
