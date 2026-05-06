@@ -1,0 +1,27 @@
+---
+title: "NBA Player Value Curve"
+author: "James Leveque, Ryan Broadhurst, Vishnu Praveen"
+format: html
+---
+
+# Introduction
+
+Write your introduction here.
+
+# Data
+
+Write your data section here.
+
+# Methods
+
+Write your methods section here.
+
+# Results
+
+Write your results section here.
+
+# Discussion
+
+Write your discussion here.
+
+# References
