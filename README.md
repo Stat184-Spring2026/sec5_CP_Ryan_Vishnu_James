@@ -1,28 +1,65 @@
-# Project Title
-
-Write a 1-2 sentences that quickly and clearly convey what your repo is for.
+# NBA Player Value Curve (Ages 25–30)
 
 ## Overview
 
-Expand on those introductory sentences with a brief but informative description of your project's purpose and goals. This section should help visitors decide whether they should dig deeper into your repo/project.
+This project analyzes how NBA superstars’ salary, efficiency, and performance change from ages **25 to 30**, a period widely considered the prime of an athlete’s career. Using tidyverse workflows and reproducible Quarto documents, we explore whether player pay actually matches on‑court production — and how injuries, contract timing, and role differences distort the relationship between salary and performance.
 
-### Interesting Insight (Optional)
+Our analysis focuses on five elite players:
 
-This is optional but highly recommended. You'll include one interesting insight from your project as part of the README. This insight is most effective when you include a visual. Keep in mind that this visual must be included as an image file (e.g., JPG, PNG, etc.). You can export plots created with `{ggplot2}` by using the function `ggsave`.
+- LeBron James  
+- Stephen Curry  
+- James Harden  
+- Kevin Durant  
+- Nikola Jokić  
+
+To compare players with different roles, we compute a custom **Performance Score**:
+
+**(PTS + REB + AST) × eFG%**
+
+This blends volume and efficiency into a single metric that works across positions.
+
+---
+
+## Interesting Insight
+
+One early insight from our analysis is that **salary does not always match single‑season performance**. Because contracts are negotiated years in advance and the salary cap rises over time, players often experience salary jumps that do not align with their performance curve. Injuries also create “fake dips” in performance that make a player appear worse even when their per‑game ability remains elite.
+
+(We will add a visualization here once exported using `ggsave()`.)
+
+---
 
 ## Data Sources and Acknowledgements
 
-Be sure to list where you got any data used within the project. Be sure to acknowledge any one whose work or elements you're drawing upon.
+Our data comes from publicly available NBA statistics and salary databases:
+
+- **ESPN** — per‑game statistics  
+- **Basketball Reference** — advanced metrics and game logs  
+- **Spotrac** — salary and contract information  
+
+We acknowledge the creators and maintainers of these resources, as well as the authors of the tidyverse ecosystem, which we use extensively for data wrangling, visualization, and reproducibility.
+
+---
 
 ## Current Plan
 
-Provide some information about what you intend to do with the project. You can additionally refer the visitor to your detailed plan document.
+Our project follows the **Plan–Code–Improve–Polish (PCIP)** system emphasized in Stat 184.
+
+- **Plan:** Identify our research question, define our performance metric, and outline our wrangling and visualization steps.  
+- **Code:** Import, clean, and wrangle the data; compute performance scores; create visualizations using the Grammar of Graphics.  
+- **Improve:** Debug code, refine visualizations using EPTs, and adjust for injury‑distorted seasons.  
+- **Polish:** Add alt text, improve readability, finalize narrative text, and ensure full reproducibility through Quarto and GitHub.
+
+A more detailed plan is included in our Quarto document.
+
+---
 
 ## Repo Structure
 
-Use this section to explain the structure of your repo. This should help visitors quickly figure out where they should look to find certain elements. Further, you can use this space to highlight and briefly explain important/key files in the repo.
-
-
 ## Authors
 
-Give information about who are the authors of the project and how people can get in touch if they have questions.
+- **Ryan Broadhurst**  
+- **Vishnu Praveen**  
+- **James Leveque**
+
+For questions, please contact any team member through the Stat 184 course communication channels.
+
