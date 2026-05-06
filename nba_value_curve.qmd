@@ -1,24 +1,207 @@
 ---
-title: "NBA Player Value Curve"
+title: "NBA Player Value Analysis"
 author: "James Leveque, Ryan Broadhurst, Vishnu Praveen"
-format: html
+format: pdf
+execute:
+  echo: false
+  warning: false
+  message: false
 ---
 
+```{r setup}
+library(tidyverse)
+```
+
 # Introduction
-The goal of this project is to explore how NBA players’ value changes between the ages of 25 and 30, a period often considered the prime of an athlete’s career. During these years, players typically reach a balance of physical ability, experience, and consistency. However, it is not always clear whether a player’s salary actually reflects their on‑court performance during this window.
+In this project, we analyzed NBA player performance for athletes between the ages of 25 and 30. Our goal was to create a simple performance score using common basketball statistics and examine how this score changed across seasons. This helps illustrate how player value shifts during key years of their careers.
 
-In this analysis, we examine trends in player efficiency, scoring, and contract size to understand how performance and pay evolve over time. By comparing production metrics to salary data, we aim to identify whether teams are overpaying, underpaying, or accurately valuing players as they move through their prime years. This helps highlight broader patterns in how NBA teams make financial decisions and how player value shifts across age.
+We chose to focus on LeBron James, Stephen Curry, James Harden, Kevin Durant, and Nikola Jokic because they represent five of the most influential and consistently high‑performing players of the modern NBA era. These players cover different positions and playstyles, and each has a long, well‑documented career with stable roles on their teams. This makes them ideal for comparing performance trends across seasons.
 
-# Data
-The data for this project comes from a dataset containing NBA player statistics, salary information, and age for multiple seasons. Each row represents a single player‑season, including variables such as points per game, efficiency metrics, minutes played, and contract value. We focused specifically on players between the ages of 25 and 30 to capture the years commonly considered an athlete’s prime. Before analysis, we filtered the dataset to include only players with complete information for both performance and salary, ensuring that comparisons across age groups were consistent and meaningful. This dataset allows us to examine how player value changes over time and whether salary trends align with on‑court production.
+We selected ages 25 to 30 because this range is widely considered the prime of an NBA player’s career. During these years, players typically reach a balance between physical ability, experience, and consistency. Younger players often show rapid development and inconsistency, while older players may experience decline. Focusing on ages 25 to 30 allows us to compare players at similar stages of their careers.
 
 # Methods
-Write your methods section here.
+To prepare the data, we filtered players to ages 25–30 and removed formatting issues in the player and season columns. We then created a performance score using points, rebounds, assists, and effective field goal percentage. Before this analysis, the original NBA tables were joined to combine salary and performance information into a single dataset, which was saved as nba_data_FINAL.csv.
+
+We restricted the dataset to ages 25 through 30 because these seasons typically represent a player’s athletic prime. This helps us avoid early‑career development years and late‑career decline years, making comparisons more meaningful.
+
+We created the performance score to combine a player’s overall production with their scoring efficiency. The formula adds points, rebounds, and assists to capture total per‑game contribution, and then multiplies that sum by effective field goal percentage to account for how efficiently the player scores. This allows the metric to reward players who produce a lot while also shooting efficiently, and it penalizes players who have high volume but low efficiency. Using this combined score gives us a single number that reflects both productivity and efficiency across seasons.
+
+# Paradigms and Coding Approach
+This project uses an exploratory data analysis approach because the goal was to look for patterns rather than test a hypothesis. For coding, we used the Tidyverse because it keeps the workflow simple and readable with functions like filter, mutate, and select.
+
+# PCIP Plan
+Our plan was to import the dataset and use Tidyverse functions to prepare it for analysis. We used filter to keep only players between ages 25 and 30, and mutate to create the performance score by combining points, rebounds, assists, and effective field goal percentage. We also used mutate to fix formatting issues in the player and season columns and select to keep only the variables needed for the table and graph. After writing the first version of the code, we improved it by removing unnecessary steps and making the cleaning process more consistent. We finished by organizing the code, adding comments, and preparing the cleaned dataset for visualization.
+
+# Data Source and FAIR/CARE Principles
+The data comes from publicly available NBA statistics on Basketball Reference. The dataset includes performance stats, salary information, and season labels. It was combined and cleaned before being saved as nba_data_FINAL.csv.
+
+The data follow the FAIR principles because they are easy to find, openly accessible, and formatted in a way that works well with statistical software. For CARE principles, the data do not involve Indigenous communities or sensitive cultural information. Since the data describe public figures, there are no privacy concerns.
+
+# Cases and Case Attributes
+In this dataset, each case is one NBA player in one season.
+
+The dataset includes the following case attributes:
+
+- player — player name  
+- season — NBA season (for example, 2018–19)  
+- age — age during that season  
+- salary — salary for that season  
+- pts — points per game  
+- trb — rebounds per game  
+- ast — assists per game  
+- efg_pct — effective field goal percentage  
+- performance_score — combined metric based on points, rebounds, assists, and shooting efficiency  
+
+These describe each player-season and are used in the analysis.
+
+# Cleaning the Data
+
+```{r load-clean, echo=FALSE, results='hide'}
+nba <- read_csv("nba_data_FINAL.csv")
+
+nba_clean <- nba %>%
+  filter(age >= 25, age <= 30) %>%
+  mutate(
+    performance_score = (pts + trb + ast) * efg_pct,
+    player = str_replace_all(player, "\n", " "),
+    season = str_replace_all(season, "\n", " ")
+  ) %>%
+  select(player, season, age, salary, pts, trb, ast, efg_pct, performance_score)
+
+write_csv(nba_clean, "nba_clean_data.csv")
+```
 
 # Results
-Write your results section here.
+
+## Descriptive Statistics
+
+```{r descriptive-stats, echo=FALSE}
+nba_clean %>%
+  summarize(
+    mean_perf = mean(performance_score),
+    sd_perf = sd(performance_score),
+    mean_salary = mean(salary, na.rm = TRUE),
+    sd_salary = sd(salary, na.rm = TRUE)
+  ) %>%
+  knitr::kable()
+```
+
+## Cleaned Data Table
+
+```{r table, echo=FALSE}
+nba_small <- read_csv("nba_clean_data.csv") %>%
+  mutate(
+    season_year = as.numeric(substr(season, 1, 4)),
+    perf = performance_score
+  )
+
+nba_small %>%
+  select(player, season, age, salary, pts, trb, ast, efg_pct, perf) %>%
+  arrange(player, season) %>%
+  knitr::kable()
+```
+
+## Performance Score Graph
+
+```{r graph, echo=FALSE}
+nba_small %>%
+  ggplot(aes(x = season_year, y = perf, color = player)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    x = "Season Year",
+    y = "Performance Score"
+  )
+```
+
+**Alt Text:** A line graph showing performance scores for five NBA players across different seasons.
+
+**Long Description:**  
+The graph displays performance scores for LeBron James, Stephen Curry, James Harden, Kevin Durant, and Nikola Jokic between ages 25 and 30. Each player has a separate line showing how their performance score changes over time. Some players show steady improvement, others peak early, and some fluctuate across seasons. The graph highlights differences in how elite players develop during their prime years.
+
+# Analysis
+The table shows each player's stats and performance score, while the graph highlights how these scores change across seasons. Players with rising lines improved during their mid-career years, while flatter or declining lines show stable or decreasing performance. This helps identify which players gained value or declined during their prime years.
+
+The graph helps us see how each player’s overall performance changes during their prime years. Because the performance score combines points, rebounds, and assists with shooting efficiency, the lines show both how much a player produces and how efficiently they do it. Upward‑sloping lines indicate players who improved steadily across seasons, while flatter or declining lines show players whose performance stayed stable or dipped. The graph also highlights differences in consistency: smooth lines represent players with steady production, while more jagged lines show players with fluctuating performance. By comparing all five players on the same scale, the graph makes it easy to see who peaked early, who improved over time, and who maintained strong performance throughout their prime.
+
+Because the performance score blends production and efficiency, the graph reflects more than just scoring totals. A player’s line rises when they either produce more (points, rebounds, assists) or become more efficient as a shooter. It falls when their efficiency drops or when their overall production decreases. This makes the graph a meaningful way to compare players with different roles and playstyles, since the score adjusts for both how much they contribute and how well they do it. As a result, the trends in the graph show true changes in player value rather than just changes in one individual statistic.
 
 # Discussion
-Write your discussion here.
+The results show that players develop differently even within the same age range. Some improve steadily, while others peak early or fluctuate. These patterns can help teams make decisions about contracts and long-term planning.
 
-# References
+Choosing ages 25 to 30 helped us focus on the seasons when players are typically at their peak. This made the comparisons more meaningful because each player was evaluated during the years when they were expected to contribute the most to their teams.
+
+# Author Contributions
+James Leveque: Data work and editing  
+Ryan Broadhurst: Graph and editing  
+Vishnu Praveen: Cleaning, analysis, writing, and coding
+
+# Code Appendix
+
+```{r code-appendix, echo=TRUE, eval=FALSE}
+library(tidyverse)
+
+nba <- read_csv("nba_data_FINAL.csv")
+
+nba_clean <- nba %>%
+  filter(age >= 25, age <= 30) %>%
+  mutate(
+    performance_score = (pts + trb + ast) * efg_pct,
+    player = str_replace_all(player, "\n", " "),
+    season = str_replace_all(season, "\n", " ")
+  ) %>%
+  select(player, season, age, salary, pts, trb, ast, efg_pct, performance_score)
+
+write_csv(nba_clean, "nba_clean_data.csv")
+
+nba_small <- read_csv("nba_clean_data.csv") %>%
+  mutate(
+    season_year = as.numeric(substr(season, 1, 4)),
+    perf = performance_score
+  )
+
+nba_small %>%
+  select(player, season, age, salary, pts, trb, ast, efg_pct, perf) %>%
+  arrange(player, season) %>%
+  knitr::kable()
+
+nba_small %>%
+  ggplot(aes(x = season_year, y = perf, color = player)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    x = "Season Year",
+    y = "Performance Score"
+  )
+```
+
+\newpage
+# GenAI Usage Appendix
+
+**Tool Used**  
+Microsoft Copilot (May 2026)
+Grammarly(May 2026)
+
+**Date of Use**  
+April–May 2026
+
+**Where GenAI Was Used**  
+We used GenAI to help improve clarity, grammar, and organization of written explanations in my report. GenAI also helped generate Alt Text and a Long Description for the performance score graph. We used it to refine the explanation of the performance score, improve transitions between sections, and make certain paragraphs easier to read.
+
+**Example Prompts**  
+Some example prompts used include:  
+- “Can you help me explain what the performance score means?”  -
+-“How can I better describe what this graph is showing?”  
+-“Can you rewrite this paragraph to make it clearer?”  
+- “Add this explanation into the analysis part please.”  
+
+Follow‑up prompts included asking for simpler wording, clearer phrasing, and more concise explanations.
+
+**Summary of GenAI Responses**  
+The responses mainly focused on:  
+- Suggesting clearer sentence structure  
+- Improving grammar and readability  
+- Helping describe trends shown in the graph  
+- Providing clearer explanations of the performance score  
+- Generating Alt Text and a Long Description for accessibility  
+
